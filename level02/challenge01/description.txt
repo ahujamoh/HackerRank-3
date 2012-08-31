@@ -1,5 +1,5 @@
-0-1-2-3-4-S-6-7-8-9-10
-P1                              P2
+00-01-02-03-04-SS-06-07-08-09-10
+P1                            P2
 
 Two players are on the opposite ends of a straight line with an expensive scotch (S) that they both want placed in the middle at position #5. The players start the game with $100 in hand. During each turn both players make a bid simultaneously. After each turn, the bottle is placed one step closer to the player who makes the higher bid and the winner’s bid is deducted from his hand. The game ends when the bottle reaches a player or if a player runs out of money, whichever occurs first. In case of an equal bid, the bottle would go to the first player and the next draw, it would go to second player. It alternates henceforth.
 
