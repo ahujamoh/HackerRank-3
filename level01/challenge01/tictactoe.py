@@ -133,7 +133,7 @@ def nextMove(player, board):
         #print "Returning winning move at coordinate: (%d, %d)" % gb.victory()
         move = gb.victory()
 
-    # The next quickest decision... are we about to loose?
+    # The next quickest decision... are we about to lose?
     if move is None and gb.block_win() is not None:
         #print "Returning blocking move at coordinate: (%d, %d)" % gb.block_win()
         move = gb.block_win()
@@ -142,7 +142,7 @@ def nextMove(player, board):
         #print "Returning a forking move at coordinate: (%d, %d)" % move
         move = gb.fork_you()
 
-    # We're not about to win and we're not about to loose, so make a move...
+    # We're not about to win and we're not about to lose, so make a move...
     if move is None:
         move = gb.incremental_move()
     #print "Returning incremental move at coordinate: (%d, %d)" % move
