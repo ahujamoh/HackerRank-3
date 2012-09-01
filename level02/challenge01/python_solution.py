@@ -73,10 +73,11 @@ def print_config(label, player, opponent):
     print '    Player distance: %d' % player.distance()
     print '    Opponent distance: %d' % opponent.distance()
 
-def win_loss(player, opponent):
+def win_loss(player, opponent, player_number=None):
     record = list()
     ties = 0
     if not isinstance(player, list):
+        player_number = player.player_number
         player = player.bids
         opponent = opponent.bids
     for (i, bid) in enumerate(player):
@@ -87,9 +88,9 @@ def win_loss(player, opponent):
         else:
             ties += 1
             if ties % 2 == 0:
-                r = 'W' if player.player_number == 2 else 'L'
+                r = 'W' if player_number == 2 else 'L'
             else:
-                r = 'L' if player.player_number == 2 else 'W'
+                r = 'L' if player_number == 2 else 'W'
             record.append(r)
     return record
 
@@ -112,7 +113,7 @@ def post_outcome_average(opponent, records, outcome):
         return -1
     elif len(l) == 1:
         return l[0]
-    return sum(l)/float(len(l))
+    return sum(l[-4:])/float(len(l))
 
 def leading_bid(player, opponent):
     try:
@@ -120,13 +121,13 @@ def leading_bid(player, opponent):
         op_avg_for_outcome = post_outcome_average(opponent, last_outcome, last_outcome)
     except IndexError:
         op_avg_for_outcome = -1
-    #print 'Average: %d' % op_avg_for_outcome
+
     if opponent.balance > player.balance:
         # We're behind in funds
         # Try to draw them out of funds
-        rand_bid = random.randint(1, 5)
+        rand_bid = random.randint(10, 20)
         while rand_bid > player.balance:
-            rand_bid = random.randint(1, 5)
+            rand_bid = random.randint(1, 10)
         return rand_bid
 
     elif opponent.balance < player.balance:
@@ -144,11 +145,11 @@ def leading_bid(player, opponent):
                 return op_avg_for_outcome + 1
             else:
                 for p in range(op_avg_for_outcome, 0, -1):
-                    if player.balance/p >= player.distance():
-                        return p
-        rand_bid = random.randint(1, 5)
+                    if player.balance/(2*p) >= player.distance():
+                        return 2*p
+        rand_bid = random.randint(1, 20)
         while rand_bid > player.balance:
-            rand_bid = random.randint(1, 5)
+            rand_bid = random.randint(1, 10)
         return rand_bid
 
 
@@ -173,18 +174,11 @@ def calculate_bid(pnum, pos, first_bids, second_bids):
     pbids = first_bids if pnum == 1 else second_bids
     obids = first_bids if onum == 1 else second_bids
 
-    precord = win_loss(pbids, obids)
-    orecord = list()
-    for r in precord:
-        if r == 'W':
-            orecord.append('L')
-        else:
-            orecord.append('W')
+    precord = win_loss(pbids, obids, pnum)
+    orecord = win_loss(obids, pbids, onum)
 
     player = Player(pnum, board, pbids, precord)
     opponent = Player(onum, board, obids, orecord)
-
-    #print_config('Starting', player, opponent)
 
     if player.distance < opponent.distance:
         #bid = trailing_bid(player, opponent)
@@ -197,6 +191,9 @@ def calculate_bid(pnum, pos, first_bids, second_bids):
         # This is either th first bid or we've returned to tie state
         bid = random.randint(1, 5)
 
+
+    if bid < 0:
+        bid = 0
 
     return bid
 
@@ -211,3 +208,4 @@ first_bids = [int(i) for i in raw_input().split()]
 second_bids = [int(i) for i in raw_input().split()]
 bid = calculate_bid(player, scotch_pos, first_bids, second_bids)
 print bid
+
