@@ -1,3 +1,4 @@
+# NOTE :: Zero padding added for readability
 00-01-02-03-04-SS-06-07-08-09-10
 P1                            P2
 
